@@ -15,15 +15,12 @@ import graphviz
 from corextopic import corextopic as ct
 from corextopic import vis_topic as vt # jupyter notebooks will complain matplotlib is being loaded twice
 
-# from sklearn.datasets import fetch_20newsgroups
 from sklearn.feature_extraction.text import CountVectorizer
 
 data = pd.read_csv(".../fed_speeches_1996_2020.csv",encoding="latin-1",header=0,index_col=0)
 
 data.drop(['link','text_len'], axis=1, inplace=True)
-# data = data[646:1499]
 
-# data['text_lem'] = data['text_lem'].str.replace('\d+', '')
 data['text'] = data['text'].apply(lambda x: re.split('https:\/\/.*', str(x))[0])
 
 data['text'] = data['text'].str.replace('[^\w\s]',' ')
@@ -37,9 +34,6 @@ data['name'] = data['speaker'].replace(dict(zip(banned,['']*len(banned))),regex=
 
 data['name'] = data['name'].str.strip()
 
-# data['name'] = data['name'].str.split().str[-1]
-# data['name'][820]
-# data['name'][893]
 data.name.value_counts()
 
 # Transform data into a sparse matrix
@@ -58,7 +52,7 @@ words = [word for ind,word in enumerate(words) if not word.isdigit()]
 
 doc_word.shape # n_docs x m_words
 
-# Train the CorEx topic model with 10 topics
+# Train the CorEx topic model with 20 topics
 topic_model = ct.Corex(n_hidden=20, words=words, max_iter=2000, verbose=False, seed=456987321,docs=data.name)
 topic_model.fit(doc_word, words=words,docs=data.name);
 
